@@ -29,5 +29,8 @@ class SC(object):
             recv += self.s.recv(len_response-len(recv))
             if not recv:
                 break
-        return json.loads(recv.decode())
+        try:
+            return json.loads(recv.decode())
+        except UnicodeDecodeError:
+            return pickle.loads(recv)
 
