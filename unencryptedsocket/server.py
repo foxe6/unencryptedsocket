@@ -24,7 +24,6 @@ class SS(object):
         print("connected\t{uid}".format(uid=uid))
         try:
             while True:
-                # request = conn.recv(1024*4).decode()
                 len_response = conn.recv(4)
                 if not len_response:
                     return None
@@ -39,7 +38,10 @@ class SS(object):
                 if not request:
                     break
                 response = {}
-                request = json.loads(request)
+                try:
+                    request = json.loads(request)
+                except:
+                    request = pickle.loads(request)
                 if request["command"] in self.functions:
                     try:
                         response = self.functions[request["command"]](*request["data"][0], **request["data"][1])
@@ -49,7 +51,6 @@ class SS(object):
                     response = json.dumps(response).encode()
                 except TypeError:
                     response = pickle.dumps(response)
-                import struct
                 conn.sendall(struct.pack('>I', len(response))+response)
         except Exception as e:
             print(e)

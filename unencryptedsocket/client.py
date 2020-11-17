@@ -18,7 +18,8 @@ class SC(object):
             request = json.dumps(request).encode()
         except:
             request = pickle.dumps(request)
-        self.s.send(request)
+        import struct
+        self.s.send(struct.pack('>I', len(request))+request)
         len_response = self.s.recv(4)
         if not len_response:
             return None
