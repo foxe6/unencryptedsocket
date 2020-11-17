@@ -24,7 +24,18 @@ class SS(object):
         print("connected\t{uid}".format(uid=uid))
         try:
             while True:
-                request = conn.recv(1024*4).decode()
+                # request = conn.recv(1024*4).decode()
+                len_response = conn.recv(4)
+                if not len_response:
+                    return None
+                import struct
+                len_response = struct.unpack('>I', len_response)[0]
+                recv = b""
+                while len(recv) < len_response:
+                    recv += conn.recv(len_response - len(recv))
+                    if not recv:
+                        break
+                request = recv
                 if not request:
                     break
                 response = {}

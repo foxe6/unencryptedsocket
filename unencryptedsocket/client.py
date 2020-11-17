@@ -2,6 +2,7 @@ import socket
 import pickle
 import json
 from omnitools import args
+from .utils import *
 
 
 __ALL__ = ["SC"]
