@@ -1,7 +1,6 @@
 import socket
 import pickle
 import json
-from omnitools import args
 
 
 __ALL__ = ["SC"]
@@ -23,7 +22,6 @@ class SC(object):
         len_response = self.s.recv(4)
         if not len_response:
             return None
-        import struct
         len_response = struct.unpack('>I', len_response)[0]
         recv = b""
         while len(recv) < len_response:

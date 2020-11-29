@@ -3,7 +3,7 @@ import socket
 import pickle
 import threading
 import traceback
-from omnitools import encryptedsocket_function
+from omnitools import encryptedsocket_function, p
 
 
 __ALL__ = ["SS"]
@@ -11,8 +11,10 @@ __ALL__ = ["SS"]
 
 class SS(object):
     def __init__(self, functions: encryptedsocket_function = None,
-                 host: str = "127.199.71.10", port: int = 39291) -> None:
+                 host: str = "127.199.71.10", port: int = 39291,
+                 silent: bool = False) -> None:
         self.terminate = False
+        self.silent = silent
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.bind((host, int(port)))
         self.s.listen(5)
@@ -21,7 +23,8 @@ class SS(object):
 
     def handler(self, conn: socket.socket, addr: tuple) -> None:
         uid = addr[0]+":"+str(addr[1])
-        print("connected\t{uid}".format(uid=uid))
+        if not self.silent:
+            p("connected\t{uid}".format(uid=uid))
         try:
             while True:
                 len_response = conn.recv(4)
@@ -53,10 +56,11 @@ class SS(object):
                     response = pickle.dumps(response)
                 conn.sendall(struct.pack('>I', len(response))+response)
         except Exception as e:
-            print(e)
+            p(e)
         finally:
             conn.close()
-            print("disconnected\t{uid}".format(uid=uid))
+            if not self.silent:
+                p("disconnected\t{uid}".format(uid=uid))
 
     def start(self) -> None:
         try:

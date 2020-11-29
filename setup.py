@@ -18,9 +18,12 @@ open("README.md", "wb").write(readme.encode("utf-8"))
 description = re.search(r"<i>(.*?)</i>", readme)[1]
 setup(
     name="unencryptedsocket",
-    version="0.4.0",
+    version="0.5.0",
     keywords=["unencrypted socket server client"],
     packages=find_packages(),
+    package_data = {
+        '': ['*.ttc'],
+    },
     url="https://github.com/foxe6/unencryptedsocket",
     license="AGPL-3.0",
     author="f̣ộx̣ệ6",
